@@ -55,7 +55,7 @@ export async function activateWarRoom(incident, airiaAgents) {
         }),
       ])
     : [
-        { channel_url: `https://guardian.slack.com/channels/${channelName}`, channel_id: channelName },
+        { channel_url: `https://guardian-vvd5824.slack.com/channels/${channelName}`, channel_id: channelName },
         { ticket_id: `INC-${Date.now().toString().slice(-4)}`, ticket_url: `https://mmallick1990.atlassian.net/browse/INC-${Date.now().toString().slice(-4)}` },
       ];
 
