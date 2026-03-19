@@ -173,7 +173,7 @@ governance_entry = f"GOV-{incident_id}-{datetime.now(timezone.utc).strftime('%Y%
 # jira_audit_ticket  = plain ticket key (no domain, so never redacted)
 slack_channel = input.get("slack_channel", "")
 jira_ticket   = input.get("jira_ticket", incident_id)
-pdf_url = slack_channel if slack_channel else f"https://guardian-vvd5824.slack.com/archives/{incident_id}"
+pdf_url = slack_channel if slack_channel else "https://guardian-vvd5824.slack.com/archives/C0AN4NHPSNM"
 
 output = {
     "incident_id":         incident_id,

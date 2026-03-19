@@ -203,7 +203,7 @@ CONFLUENCE_SPACE_KEY=
   "jira_ticket":        "INC-5",
   "governance_entry":   "GOV-INC-2603192222-20260320",
   "compliance_status":  "DORA_SOX_COMPLIANT",
-  "postmortem_pdf_url": "https://guardian-vvd5824.slack.com/archives/C0AMRJ74FA6"
+  "postmortem_pdf_url": "https://guardian-vvd5824.slack.com/archives/C0AN4NHPSNM"
 }
 ```
 
