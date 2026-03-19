@@ -38,20 +38,20 @@ PagerDuty → [Triage Sentinel] → [Runbook Agent] → [HITL Gate] → [War Roo
 ## Tech Stack
 
 - **Platform:** Airia Agent Studio (16 features used)
-- **Language:** Node.js 20 (ESM)
+- **Language:** Python 3 (Airia nodes) + Node.js 20 ESM (local orchestration + tests)
 - **Integrations:** PagerDuty, Confluence, Slack, Jira
 - **Regulatory:** DORA Article 11, SOX Section 404, EU AI Act
 - **Airia Features:** Webhook, Code Block, AI Model, Knowledge Graph, MCP Gateway, MCP Apps, HITL, Nested Agents, Document Generator, Governance Dashboard, Compliance Automation, Community (×3), + more
 
 ## Community Modules
 
-Fork any of these for your own use:
+Three standalone Node.js modules in [`/community`](community/) — fork and use in any stack, no Airia required:
 
-| Module | Description | Fork For |
-|--------|-------------|----------|
-| [Triage Sentinel](https://github.com/manojmallick/guardian/tree/main/community/triage-sentinel) | Universal alert classification | Any alerting tool |
-| [War Room Coordinator](https://github.com/manojmallick/guardian/tree/main/community/warroom-coordinator) | Slack + Jira war room in 4s | Any SRE team |
-| [Compliance Narrator](https://github.com/manojmallick/guardian/tree/main/community/compliance-narrator) | AI audit trail PDF | Any regulated industry |
+| Module | What it does | Folder |
+|--------|-------------|--------|
+| Triage Sentinel | Deterministic P1/P2/P3 alert classification + AI reasoning. Works with PagerDuty, OpsGenie, Datadog, CloudWatch | [community/triage-sentinel](community/triage-sentinel/) |
+| War Room Coordinator | Creates Slack incident channel + Jira ticket in parallel in under 5s | [community/warroom-coordinator](community/warroom-coordinator/) |
+| Compliance Narrator | Generates DORA/SOX/HIPAA/FISMA audit trail from incident context | [community/compliance-narrator](community/compliance-narrator/) |
 
 ## Setup
 

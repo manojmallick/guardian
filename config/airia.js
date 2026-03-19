@@ -2,9 +2,9 @@
 // Airia platform configuration — API base URLs, model names, feature flags
 
 export const AIRIA_CONFIG = {
-  apiBaseUrl:        'https://api.airia.com/v1',
-  webhookBasePath:   '/webhooks',
-  endpointPath:      '/guardian-triage',
+  apiBaseUrl:        'https://api.airia.ai/v2',
+  webhookBasePath:   '/PipelineExecution',
+  endpointPath:      `/${process.env.AIRIA_PIPELINE_ID || ''}`,
   defaultModel:      process.env.AI_MODEL || 'claude-3-5-sonnet-20241022',
   maxTokens:         parseInt(process.env.AI_MAX_TOKENS || '1000', 10),
   temperature:       parseFloat(process.env.AI_TEMPERATURE || '0.1'),

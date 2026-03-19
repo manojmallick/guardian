@@ -14,10 +14,10 @@ if (!AIRIA_API_KEY || !AIRIA_WORKSPACE) {
 }
 
 async function airiaRequest(method, path, body) {
-  const res = await fetch(`https://api.airia.com/v1/workspaces/${AIRIA_WORKSPACE}${path}`, {
+  const res = await fetch(`https://api.airia.ai/v2/workspaces/${AIRIA_WORKSPACE}${path}`, {
     method,
     headers: {
-      Authorization: `Bearer ${AIRIA_API_KEY}`,
+      'X-Api-Key': AIRIA_API_KEY,
       'Content-Type': 'application/json',
     },
     body: body ? JSON.stringify(body) : undefined,

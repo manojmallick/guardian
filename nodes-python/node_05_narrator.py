@@ -169,13 +169,16 @@ post_mortem = {
 
 governance_entry = f"GOV-{incident_id}-{datetime.now(timezone.utc).strftime('%Y%m%d')}"
 
-# Postmortem URL — links to the real Jira ticket which contains the full audit trail
-jira_url = input.get("jira_url", "")
-pdf_url  = jira_url if jira_url else f"https://mmallick1990.atlassian.net/browse/{input.get('jira_ticket', incident_id)}"
+# postmortem_pdf_url = Slack war room (real URL, never scrubbed by Airia vault)
+# jira_audit_ticket  = plain ticket key (no domain, so never redacted)
+slack_channel = input.get("slack_channel", "")
+jira_ticket   = input.get("jira_ticket", incident_id)
+pdf_url = slack_channel if slack_channel else f"https://guardian-vvd5824.slack.com/archives/{incident_id}"
 
 output = {
     "incident_id":         incident_id,
     "postmortem_pdf_url":  pdf_url,
+    "jira_audit_ticket":   jira_ticket,
     "postmortem_content":  post_mortem,
     "governance_entry":    governance_entry,
     "compliance_status":   "DORA_SOX_COMPLIANT",

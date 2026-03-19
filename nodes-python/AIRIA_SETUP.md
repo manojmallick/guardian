@@ -32,7 +32,7 @@ In Airia Studio → **Settings → Secrets**, add:
 | `JIRA_API_TOKEN`       | *(your Atlassian API token)* |
 | `JIRA_PROJECT_KEY`     | `INC` |
 | `SLACK_BOT_TOKEN`      | `xoxb-...` |
-| `SLACK_ONCALL_CHANNEL` | `C0AM7P3AEBH` |
+| `SLACK_ONCALL_CHANNEL` | `D0AMSNK14JY` |
 | `SLACK_WORKSPACE_ID`   | `T0AMKMGMH5K` |
 
 ---

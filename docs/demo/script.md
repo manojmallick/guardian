@@ -10,7 +10,7 @@ Browser layout:
 - Tab 5: Airia Governance Dashboard
 - Tab 6: Post-mortem PDF (pre-rendered backup at docs/demo/sample-postmortem.pdf)
 
-Trigger demo alert: `npm run demo` or `node scripts/trigger-demo.js --mode=direct`
+Trigger demo alert: `npm run demo` (fires PagerDuty + Airia pipeline simultaneously)
 
 ---
 
