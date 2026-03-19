@@ -1,0 +1,14 @@
+{
+  "title": "Payment Gateway Outage Runbook (Cached)",
+  "url": "https://yourcompany.atlassian.net/wiki/spaces/RUNBOOKS/pages/12346",
+  "steps": [
+    "Declare major incident in PagerDuty and page entire payments team",
+    "Immediately disable payment feature flags to prevent further failures",
+    "Check Stripe, Adyen, and internal gateway health dashboards",
+    "Review last deployment and roll back if deployed within last 4 hours",
+    "Notify customer support and prepare status page update"
+  ],
+  "lastUpdated": "2026-01-28T11:00:00Z",
+  "owner": "payments-oncall",
+  "source": "CACHED_FALLBACK"
+}

@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment — never commit secrets
+.env
+.env.local
+.env.production
+
+# Build output
+dist/
+build/
+*.pdf
+
+# Airia exports (may contain workspace-specific IDs)
+airia/pipeline-export-*.json
+
+# Logs
+*.log
+logs/
+logs/**
+
+# Test output
+coverage/
+.jest-cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
+
+

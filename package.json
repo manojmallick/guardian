@@ -1,0 +1,36 @@
+{
+  "name": "guardian",
+  "version": "1.0.0",
+  "description": "AI-Governed Incident Response for Regulated Financial Systems — Airia Hackathon 2026",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "workspaces": [
+    "nodes/*",
+    "sub-agents/*",
+    "community/*"
+  ],
+  "scripts": {
+    "setup":            "node scripts/setup.js",
+    "demo":             "node scripts/trigger-demo.js",
+    "seed:confluence":  "node scripts/seed-confluence.js",
+    "seed:kg":          "node scripts/seed-knowledge-graph.js",
+    "test":             "node --experimental-vm-modules node_modules/.bin/jest",
+    "test:unit":        "jest tests/unit/",
+    "test:integration": "jest tests/integration/",
+    "test:node":        "node scripts/test-node.js",
+    "test:pipeline":    "node scripts/test-pipeline.js",
+    "postmortem:gen":   "node scripts/generate-postmortem.js",
+    "lint":             "eslint nodes/ sub-agents/ community/ config/ --ext .js"
+  },
+  "dependencies": {
+    "zod":    "^3.22.0",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "jest":   "^29.7.0",
+    "eslint": "^8.57.0"
+  }
+}

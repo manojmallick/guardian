@@ -1,0 +1,14 @@
+{
+  "title": "Fraud Detection Degradation Runbook (Cached)",
+  "url": "https://yourcompany.atlassian.net/wiki/spaces/RUNBOOKS/pages/12347",
+  "steps": [
+    "Check ML model serving health in Seldon or KFServing dashboard",
+    "Verify feature store (Redis/Feast) connectivity and latency",
+    "Check if fraud rules engine is falling back to simplified rule set",
+    "Switch fraud detection to fallback rule-based mode if model latency > 500ms",
+    "Escalate to ML platform team if feature store is unavailable"
+  ],
+  "lastUpdated": "2026-02-03T14:15:00Z",
+  "owner": "risk-oncall",
+  "source": "CACHED_FALLBACK"
+}

@@ -1,0 +1,17 @@
+{
+  "incident_id": "TEST-001",
+  "service": "payment-gateway",
+  "severity": "P1",
+  "confidence": 100,
+  "isCriticalService": true,
+  "criticalMultiplierApplied": true,
+  "reasoning": "Matched 4 of 4 P1 criteria. Critical service multiplier: true.",
+  "alert_raw": {
+    "latencyMs": 847,
+    "errorRate": 0.23,
+    "durationMin": 4,
+    "transactionsAffected": 3400
+  },
+  "triggered_at": "2026-03-19T10:00:00Z",
+  "triage_completed_at": "2026-03-19T10:00:03Z"
+}

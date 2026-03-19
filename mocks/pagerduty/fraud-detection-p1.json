@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-4473",
+  "service": "fraud-detection",
+  "alert": {
+    "latencyMs": 920,
+    "errorRate": 0.18,
+    "durationMin": 5,
+    "transactionsAffected": 1800,
+    "p95LatencyMs": 1500,
+    "p99LatencyMs": 2800,
+    "errorTypes": ["model_timeout", "feature_store_unavailable"],
+    "affectedRegions": ["eu-west-1", "eu-central-1", "us-east-1"]
+  },
+  "triggered_at": "2026-03-16T14:33:00Z",
+  "pagerduty_url": "https://yourcompany.pagerduty.com/incidents/INC-4473",
+  "runbook_hint": "fraud-detection-degradation"
+}

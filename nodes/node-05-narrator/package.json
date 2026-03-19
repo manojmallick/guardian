@@ -1,0 +1,14 @@
+{
+  "name": "@guardian/node-05-narrator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "Guardian Node 05 — Compliance Narrator: post-mortem PDF + DORA/SOX governance record",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  }
+}

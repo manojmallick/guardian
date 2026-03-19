@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-4471",
+  "service": "payment-gateway",
+  "severity": "P1",
+  "confidence": 94,
+  "ai_summary": "Latency spike to 847ms with 23% error rate sustained over 4 minutes. Matches payment degradation pattern.",
+  "runbook_url": "https://yourcompany.atlassian.net/wiki/spaces/RUNBOOKS/pages/123",
+  "runbook_steps": [
+    "Check Stripe API status at status.stripe.com",
+    "Verify DB connection pool utilization in Datadog",
+    "Check recent deployments in last 2 hours"
+  ],
+  "hitl": {
+    "approver_name": "Jane Smith",
+    "approved_at": "2026-03-19T10:02:00Z"
+  }
+}

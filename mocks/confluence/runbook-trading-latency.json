@@ -1,0 +1,14 @@
+{
+  "title": "Trading API Latency Degradation Runbook (Cached)",
+  "url": "https://yourcompany.atlassian.net/wiki/spaces/RUNBOOKS/pages/12348",
+  "steps": [
+    "Check market data feed latency — Bloomberg/Refinitiv connection health",
+    "Verify order routing layer and FIX gateway connection pool",
+    "Check database connection pool on trading-db-01 and trading-db-02",
+    "Review circuit breaker status on downstream broker connections",
+    "Escalate to markets SRE if latency > 500ms sustained for > 2 minutes"
+  ],
+  "lastUpdated": "2026-02-10T08:45:00Z",
+  "owner": "trading-oncall",
+  "source": "CACHED_FALLBACK"
+}

@@ -1,0 +1,184 @@
+{
+  "name": "Guardian — AI-Governed Incident Response",
+  "version": "1.0.0",
+  "description": "Five-node AI agent pipeline for regulated financial incident response. DORA Article 11 + SOX Section 404 compliant.",
+  "track": "Track 2: Active Agents",
+  "author": "Manoj Mallick — LearnHubPlay BV, Amsterdam",
+  "deployment": {
+    "type": "api_endpoint",
+    "path": "/guardian-triage",
+    "method": "POST",
+    "auth": "webhook_secret"
+  },
+  "nodes": [
+    {
+      "id": "node-01-triage",
+      "name": "Triage Sentinel",
+      "description": "Classifies PagerDuty alert severity (P1/P2/P3) using deterministic Node.js logic enhanced by AI reasoning.",
+      "type": "code_block",
+      "language": "nodejs",
+      "code_file": "nodes/node-01-triage/index.js",
+      "next": "node-02-runbook",
+      "airia_features": [
+        "webhook_trigger",
+        "nodejs_code_block",
+        "ai_model_call",
+        "structured_output",
+        "agent_variables"
+      ],
+      "ai_model": {
+        "model": "claude-3-5-sonnet-20241022",
+        "max_tokens": 1000,
+        "temperature": 0.1,
+        "prompt_file": "nodes/node-01-triage/ai-prompt.js"
+      },
+      "structured_output_schema": "nodes/node-01-triage/schema.js"
+    },
+    {
+      "id": "node-02-runbook",
+      "name": "Runbook Agent",
+      "description": "Retrieves the most relevant Confluence runbook using semantic Knowledge Graph search via MCP Gateway.",
+      "type": "mcp_gateway",
+      "connections": ["atlassian-confluence"],
+      "knowledge_graph": "guardian-runbooks-kg",
+      "code_file": "nodes/node-02-runbook/index.js",
+      "next": "node-03-hitl",
+      "airia_features": [
+        "knowledge_graph",
+        "mcp_gateway",
+        "https_node",
+        "agent_variables"
+      ],
+      "mcp_connection": {
+        "type": "atlassian_confluence",
+        "server": "airia-hosted-atlassian-mcp",
+        "credentials": "airia_vault",
+        "space_key": "RUNBOOKS"
+      },
+      "knowledge_graph_config": {
+        "name": "guardian-runbooks-kg",
+        "source": "confluence",
+        "space_key": "RUNBOOKS",
+        "label_filter": "guardian-indexed",
+        "search_type": "semantic_similarity",
+        "top_k": 3
+      },
+      "fallback": {
+        "type": "knowledge_base",
+        "key": "runbook-cache.json"
+      },
+      "structured_output_schema": "nodes/node-02-runbook/schema.js"
+    },
+    {
+      "id": "node-03-hitl",
+      "name": "HITL Gate",
+      "description": "Sends interactive Slack approval request via MCP Apps. DORA Article 11 human oversight checkpoint.",
+      "type": "human_in_the_loop",
+      "timeout_minutes": 15,
+      "timeout_action": "auto_escalate",
+      "channel": "slack",
+      "mcp_apps": true,
+      "code_file": "nodes/node-03-hitl/index.js",
+      "next_on_approve": "node-04-warroom",
+      "next_on_escalate": "node-04-warroom",
+      "next_on_reject": null,
+      "next_on_timeout": "node-04-warroom",
+      "airia_features": [
+        "hitl_node",
+        "slack_bot_deployment",
+        "mcp_apps",
+        "agent_variables"
+      ],
+      "hitl_config": {
+        "approval_channel": "#sre-oncall",
+        "timeout_minutes": 15,
+        "timeout_escalation_channel": "#sre-escalations",
+        "record_approver_identity": true,
+        "record_timestamp": true,
+        "governance_log": true
+      },
+      "mcp_apps_config": {
+        "type": "mcp_app_interactive",
+        "buttons": ["approve", "escalate", "reject"],
+        "include_runbook_preview": true,
+        "include_sla_countdown": true
+      },
+      "structured_output_schema": "nodes/node-03-hitl/schema.js"
+    },
+    {
+      "id": "node-04-warroom",
+      "name": "War Room Agent",
+      "description": "Activates incident war room: creates Slack channel + Jira ticket in parallel via nested agents.",
+      "type": "nested_agent",
+      "sub_agents": [
+        "sub-agents/slack-warroom-subagent",
+        "sub-agents/jira-ticket-subagent"
+      ],
+      "execution": "parallel",
+      "code_file": "nodes/node-04-warroom/index.js",
+      "next": null,
+      "next_trigger": "on_resolve",
+      "next_on_resolve": "node-05-narrator",
+      "airia_features": [
+        "nested_agent",
+        "mcp_gateway",
+        "https_nodes",
+        "agent_variables"
+      ],
+      "mcp_connections": [
+        {
+          "type": "slack",
+          "server": "airia-hosted-slack-mcp",
+          "credentials": "airia_vault",
+          "scopes": ["channels:write", "chat:write", "users:read"]
+        },
+        {
+          "type": "atlassian_jira",
+          "server": "airia-hosted-atlassian-mcp",
+          "credentials": "airia_vault",
+          "project_key": "INC"
+        }
+      ],
+      "structured_output_schema": "nodes/node-04-warroom/schema.js"
+    },
+    {
+      "id": "node-05-narrator",
+      "name": "Compliance Narrator",
+      "description": "Generates post-mortem PDF with AI decision audit trail. DORA Article 11 + SOX Section 404 compliance record.",
+      "type": "document_generator",
+      "trigger": "on_resolve",
+      "template": "compliance-postmortem",
+      "governance_dashboard": true,
+      "compliance_automation": true,
+      "code_file": "nodes/node-05-narrator/index.js",
+      "next": null,
+      "airia_features": [
+        "document_generator",
+        "governance_dashboard",
+        "compliance_automation",
+        "structured_output",
+        "agent_variables"
+      ],
+      "document_config": {
+        "template": "compliance-postmortem",
+        "format": "pdf",
+        "sections": 6,
+        "regulatory_frameworks": ["dora", "sox"]
+      },
+      "governance_config": {
+        "record_all_ai_decisions": true,
+        "record_human_approvals": true,
+        "include_model_metadata": true,
+        "compliance_certification": true
+      },
+      "structured_output_schema": "nodes/node-05-narrator/schema.js"
+    }
+  ],
+  "community_modules": [
+    "airia/community/triage-sentinel.json",
+    "airia/community/warroom-coordinator.json",
+    "airia/community/compliance-narrator.json"
+  ],
+  "regulatory_frameworks": ["dora_article_11", "sox_section_404", "eu_ai_act"],
+  "created_at": "2026-03-19T00:00:00Z"
+}

@@ -1,0 +1,74 @@
+{
+  "module_id": "warroom-coordinator",
+  "name": "War Room Coordinator — Automated Incident Response Setup",
+  "version": "1.0.0",
+  "description": "Eliminates the 8-minute manual war room scramble. Creates a Slack incident channel, posts a full incident summary with runbook steps, @mentions on-call teams, and opens a Jira ticket — all in parallel, all in under 5 seconds.",
+  "author": {
+    "name": "Manoj Mallick",
+    "email": "manoj@learnhubplay.com",
+    "organisation": "LearnHubPlay BV"
+  },
+  "airia_community_url": "https://community.airia.com/agents/warroom-coordinator",
+  "license": "MIT",
+  "source_directory": "community/warroom-coordinator/",
+  "entry_file": "community/warroom-coordinator/index.js",
+  "runtime": "nodejs20",
+  "airia_features_used": [
+    "nested_agent",
+    "mcp_gateway",
+    "https_nodes",
+    "structured_output",
+    "agent_variables"
+  ],
+  "required_integrations": [
+    {
+      "name": "Slack",
+      "type": "MCP Gateway",
+      "scopes": ["channels:write", "chat:write", "users:read"],
+      "credentials": "Store bot token in Airia secrets vault"
+    },
+    {
+      "name": "Jira",
+      "type": "MCP Gateway",
+      "project_key": "configurable",
+      "credentials": "Store API token in Airia secrets vault"
+    }
+  ],
+  "customization_points": {
+    "oncall_teams_file": "community/warroom-coordinator/config/oncall-teams.js",
+    "description": "Edit oncall-teams.js to map your service names to your Slack user groups. Set your Jira project key. Everything else is automatic."
+  },
+  "fork_use_cases": [
+    "Any SRE team — universal Slack + Jira integration",
+    "IT Operations / NOC teams",
+    "Any engineering team using Slack + Jira",
+    "Customer success teams managing system outages"
+  ],
+  "inputs": {
+    "format": "JSON",
+    "schema": {
+      "incident_id": "string",
+      "service": "string",
+      "severity": "P1|P2|P3",
+      "runbook_url": "string (URL)",
+      "runbook_steps": "string[] (top 3)",
+      "oncall_team": "string[] (Slack user group handles)",
+      "ai_summary": "string",
+      "hitl_approver": "string (optional)"
+    }
+  },
+  "outputs": {
+    "format": "JSON",
+    "schema": {
+      "slack_channel": "string (URL)",
+      "slack_channel_id": "string",
+      "jira_ticket": "string (ticket ID)",
+      "jira_url": "string (URL)",
+      "oncall_notified": "string[]",
+      "warroom_activated_at": "ISO8601"
+    }
+  },
+  "readme_first_line": "Eliminate the 8-minute war room scramble. Automated in 4 seconds.",
+  "demo_payload": "community/warroom-coordinator/examples/input-p1.json",
+  "demo_output": "community/warroom-coordinator/examples/output-warroom.json"
+}

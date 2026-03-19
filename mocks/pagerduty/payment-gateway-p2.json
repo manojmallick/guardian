@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-4472",
+  "service": "payment-gateway",
+  "alert": {
+    "latencyMs": 480,
+    "errorRate": 0.07,
+    "durationMin": 8,
+    "transactionsAffected": 350,
+    "p95LatencyMs": 720,
+    "p99LatencyMs": 950,
+    "errorTypes": ["timeout"],
+    "affectedRegions": ["eu-west-1"]
+  },
+  "triggered_at": "2026-03-15T09:12:00Z",
+  "pagerduty_url": "https://yourcompany.pagerduty.com/incidents/INC-4472",
+  "runbook_hint": "payment-gateway-latency"
+}

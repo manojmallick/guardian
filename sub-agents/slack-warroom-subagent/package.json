@@ -1,0 +1,14 @@
+{
+  "name": "@guardian/slack-warroom-subagent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "Guardian SlackWarRoomSubAgent — creates incident channel, posts summary, @mentions on-call team",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  }
+}

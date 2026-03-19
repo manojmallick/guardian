@@ -1,0 +1,59 @@
+{
+  "node_id": "node-02-runbook",
+  "name": "Runbook Agent",
+  "version": "1.0.0",
+  "type": "mcp_gateway",
+  "description": "Searches Confluence for the most relevant runbook using Airia Knowledge Graph semantic search. Returns top 3 runbook matches with extracted steps.",
+  "mcp_connection": {
+    "provider": "atlassian_confluence",
+    "server_type": "airia_hosted",
+    "server_id": "atlassian-mcp-server",
+    "credentials": {
+      "storage": "airia_vault",
+      "key": "atlassian-confluence-token",
+      "note": "Atlassian API token and email stored in Airia secrets vault. Zero credentials in code."
+    },
+    "config": {
+      "base_url_env": "CONFLUENCE_BASE_URL",
+      "space_key": "RUNBOOKS"
+    }
+  },
+  "knowledge_graph": {
+    "name": "guardian-runbooks-kg",
+    "description": "Semantic index of all Confluence RUNBOOKS space pages",
+    "source": {
+      "type": "confluence",
+      "space_key": "RUNBOOKS",
+      "label_filter": "guardian-indexed"
+    },
+    "search": {
+      "type": "semantic_similarity",
+      "top_k": 3,
+      "min_score": 0.6
+    },
+    "reindex_trigger": "label_change",
+    "index_fields": ["title", "body", "labels", "owner_label"]
+  },
+  "code": {
+    "entry_file": "nodes/node-02-runbook/index.js",
+    "runtime": "nodejs20",
+    "timeout_seconds": 10
+  },
+  "https_node": {
+    "enabled": true,
+    "used_for": "Confluence REST API fallback if MCP Gateway times out"
+  },
+  "fallback": {
+    "type": "knowledge_base",
+    "key": "runbook-cache.json",
+    "trigger": "mcp_unavailable or no_results"
+  },
+  "structured_output": {
+    "schema_file": "nodes/node-02-runbook/schema.js",
+    "enforce_schema": true
+  },
+  "agent_variables": {
+    "receive_from_previous": ["incident_id", "service", "severity", "confidence", "reasoning", "ai_explanation", "alert_raw", "triggered_at", "triage_completed_at", "isCriticalService"],
+    "pass_to_next": ["runbooks", "runbook_retrieved_at"]
+  }
+}

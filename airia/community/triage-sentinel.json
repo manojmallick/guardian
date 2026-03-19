@@ -1,0 +1,64 @@
+{
+  "module_id": "triage-sentinel",
+  "name": "Triage Sentinel — AI-Powered Alert Classification Engine",
+  "version": "1.0.0",
+  "description": "Universal AI alert classification engine. Receives webhook from any alerting tool (PagerDuty, OpsGenie, Datadog, CloudWatch, Prometheus) and classifies severity as P1/P2/P3 in under 3 seconds using deterministic threshold logic enhanced by AI reasoning.",
+  "author": {
+    "name": "Manoj Mallick",
+    "email": "manoj@learnhubplay.com",
+    "organisation": "LearnHubPlay BV"
+  },
+  "airia_community_url": "https://community.airia.com/agents/triage-sentinel",
+  "license": "MIT",
+  "source_directory": "community/triage-sentinel/",
+  "entry_file": "community/triage-sentinel/index.js",
+  "runtime": "nodejs20",
+  "airia_features_used": [
+    "webhook_trigger",
+    "nodejs_code_block",
+    "ai_model_call",
+    "structured_output",
+    "agent_variables"
+  ],
+  "compatible_alert_sources": [
+    "PagerDuty",
+    "OpsGenie",
+    "Datadog",
+    "CloudWatch Alarms",
+    "Prometheus Alertmanager"
+  ],
+  "fork_use_cases": [
+    "Healthcare: EHR system alerts, patient monitoring degradation",
+    "Retail: Checkout system failures, payment processor latency",
+    "Infrastructure: Any server/network monitoring stack",
+    "Fintech: Trading API and payment gateway incidents"
+  ],
+  "customization_points": {
+    "threshold_file": "community/triage-sentinel/thresholds.js",
+    "adapter_directory": "community/triage-sentinel/adapters/",
+    "description": "Edit P1/P2/P3 threshold values in thresholds.js. Add services to the critical-service multiplier list. Plug in your alerting tool adapter."
+  },
+  "inputs": {
+    "format": "JSON",
+    "schema": {
+      "alert_source": "string (pagerduty|opsgenie|datadog|cloudwatch|prometheus)",
+      "raw_payload": "object (source-specific webhook payload)"
+    }
+  },
+  "outputs": {
+    "format": "JSON",
+    "schema": {
+      "incident_id": "string",
+      "service": "string",
+      "severity": "P1|P2|P3",
+      "confidence": "number (0-100)",
+      "reasoning": "string",
+      "ai_explanation": "string",
+      "triggered_at": "ISO8601",
+      "triage_completed_at": "ISO8601"
+    }
+  },
+  "readme_first_line": "Works with any alerting tool. Plug in your webhook, get AI triage in 3 seconds.",
+  "demo_payload": "community/triage-sentinel/examples/pagerduty-payload.json",
+  "demo_output": "community/triage-sentinel/examples/output-p1.json"
+}

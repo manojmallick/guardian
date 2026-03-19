@@ -1,0 +1,11 @@
+{
+  "incident_id": "TEST-001",
+  "service": "payment-gateway",
+  "triggered_at": "2026-03-19T10:00:00Z",
+  "alert": {
+    "latencyMs": 847,
+    "errorRate": 0.23,
+    "durationMin": 4,
+    "transactionsAffected": 3400
+  }
+}

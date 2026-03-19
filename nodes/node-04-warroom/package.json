@@ -1,0 +1,14 @@
+{
+  "name": "@guardian/node-04-warroom",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "Guardian Node 04 — War Room Agent: nested Slack + Jira sub-agents running in parallel",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  }
+}

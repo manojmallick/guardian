@@ -1,0 +1,17 @@
+{
+  "incident_id": "INC-4474",
+  "service": "trading-api",
+  "alert": {
+    "latencyMs": 870,
+    "errorRate": 0.21,
+    "durationMin": 3,
+    "transactionsAffected": 2200,
+    "p95LatencyMs": 1400,
+    "p99LatencyMs": 2300,
+    "errorTypes": ["order_execution_timeout", "market_data_lag"],
+    "affectedRegions": ["eu-west-1"]
+  },
+  "triggered_at": "2026-03-17T08:05:00Z",
+  "pagerduty_url": "https://yourcompany.pagerduty.com/incidents/INC-4474",
+  "runbook_hint": "trading-api-latency"
+}

@@ -1,0 +1,46 @@
+{
+  "node_id": "node-01-triage",
+  "name": "Triage Sentinel",
+  "version": "1.0.0",
+  "type": "code_block",
+  "language": "nodejs",
+  "description": "Receives PagerDuty webhook and classifies incident severity P1/P2/P3 using deterministic threshold logic + AI explanation.",
+  "trigger": {
+    "type": "webhook",
+    "deployment": "api_endpoint",
+    "path": "/guardian-triage",
+    "method": "POST",
+    "secret_header": "X-PagerDuty-Signature",
+    "secret_env": "AIRIA_WEBHOOK_SECRET"
+  },
+  "code": {
+    "entry_file": "nodes/node-01-triage/index.js",
+    "runtime": "nodejs20",
+    "timeout_seconds": 10
+  },
+  "ai_model_call": {
+    "enabled": true,
+    "model": "claude-3-5-sonnet-20241022",
+    "max_tokens": 1000,
+    "temperature": 0.1,
+    "prompt_source": "nodes/node-01-triage/ai-prompt.js",
+    "fallback_on_timeout": true,
+    "timeout_seconds": 5
+  },
+  "structured_output": {
+    "schema_file": "nodes/node-01-triage/schema.js",
+    "enforce_schema": true,
+    "on_schema_violation": "fallback_with_p2"
+  },
+  "agent_variables": {
+    "pass_to_next": [
+      "incident_id", "service", "severity", "confidence", "reasoning",
+      "ai_explanation", "alert_raw", "triggered_at", "triage_completed_at",
+      "isCriticalService", "model_used"
+    ]
+  },
+  "error_handling": {
+    "on_invalid_payload": { "severity": "P2", "confidence": 0 },
+    "on_model_timeout": "continue_without_ai_explanation"
+  }
+}

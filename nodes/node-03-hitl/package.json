@@ -1,0 +1,14 @@
+{
+  "name": "@guardian/node-03-hitl",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "Guardian Node 03 — HITL Gate: MCP Apps interactive Slack approval + DORA compliance checkpoint",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  }
+}

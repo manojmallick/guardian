@@ -1,0 +1,38 @@
+{
+  "incident_id": "INC-4471",
+  "service": "payment-gateway",
+  "severity": "P1",
+  "confidence": 94,
+  "reasoning": "Matched 4 of 4 P1 criteria. Critical service multiplier: true.",
+  "model_used": "claude-3-5-sonnet-20241022",
+  "alert_raw": {
+    "latencyMs": 847,
+    "errorRate": 0.23,
+    "durationMin": 4,
+    "transactionsAffected": 3400
+  },
+  "triggered_at": "2026-03-15T02:47:13Z",
+  "triage_completed_at": "2026-03-15T02:47:16Z",
+  "runbooks": [
+    {
+      "title": "Payment Gateway Latency Degradation Runbook",
+      "url": "https://yourcompany.atlassian.net/wiki/spaces/RUNBOOKS/pages/123",
+      "steps": ["Check Stripe API status", "Verify DB connection pool", "Check recent deployments"],
+      "owner": "payments-oncall"
+    }
+  ],
+  "runbook_retrieved_at": "2026-03-15T02:47:18Z",
+  "hitl": {
+    "decision": "approved",
+    "approver": "U0123456789",
+    "approver_name": "Jane Smith",
+    "approved_at": "2026-03-15T02:49:02Z",
+    "response_time_seconds": 109
+  },
+  "slack_channel": "#inc-4471-payment-gateway",
+  "jira_ticket": "INC-4471",
+  "warroom_activated_at": "2026-03-15T02:49:06Z",
+  "resolved_at": "2026-03-15T03:22:00Z",
+  "resolved_by": "payments-oncall",
+  "sla_breached": false
+}

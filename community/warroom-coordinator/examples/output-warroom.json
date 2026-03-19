@@ -1,0 +1,8 @@
+{
+  "slack_channel": "https://slack.com/archives/C123456",
+  "slack_channel_id": "C123456",
+  "jira_ticket": "INC-4471",
+  "jira_url": "https://yourcompany.atlassian.net/jira/browse/INC-4471",
+  "oncall_notified": ["@payments-oncall", "@sre-lead"],
+  "warroom_activated_at": "2026-03-19T10:02:06Z"
+}

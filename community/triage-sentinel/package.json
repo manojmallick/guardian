@@ -1,0 +1,14 @@
+{
+  "name": "airia-triage-sentinel",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "main": "index.js",
+  "description": "Universal AI-powered alert triage engine. Works with PagerDuty, OpsGenie, Datadog, CloudWatch, Prometheus. Plug in your webhook, get P1/P2/P3 classification in 3 seconds.",
+  "keywords": ["airia", "incident-response", "sre", "devops", "triage", "pagerduty", "ai"],
+  "author": "Manoj Mallick <manoj@learnhubplay.com>",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.22.0"
+  }
+}

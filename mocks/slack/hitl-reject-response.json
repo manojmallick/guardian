@@ -1,0 +1,11 @@
+{
+  "decision": "rejected",
+  "approver": "U0987654321",
+  "approver_name": "Alex Chen",
+  "rejected_at": "2026-03-15T09:14:30Z",
+  "response_time_seconds": 150,
+  "incident_id": "INC-4472",
+  "action_taken": "reject",
+  "rejection_reason": "False alarm — scheduled maintenance window in progress",
+  "slack_message_ts": "1710493470.654321"
+}

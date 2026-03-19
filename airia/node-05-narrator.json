@@ -1,0 +1,83 @@
+{
+  "node_id": "node-05-narrator",
+  "name": "Compliance Narrator",
+  "version": "1.0.0",
+  "type": "document_generator",
+  "description": "Triggered on incident resolution. Generates a fully auditable post-mortem PDF and records the complete AI decision trail in the Airia Governance Dashboard. Satisfies DORA Article 11 and SOX Section 404.",
+  "trigger": {
+    "mode": "on_resolve",
+    "sources": [
+      { "type": "jira_status_change", "status": "Resolved", "project": "INC" },
+      { "type": "slack_slash_command", "command": "/guardian-resolved", "channels": ["#sre-oncall", "#inc-*"] }
+    ]
+  },
+  "document_config": {
+    "template_id": "compliance-postmortem",
+    "output_format": "pdf",
+    "sections": 6,
+    "section_structure": [
+      "1. Incident Summary",
+      "2. Incident Timeline",
+      "3. AI Decision Audit",
+      "4. Regulatory Compliance Record",
+      "5. Root Cause & Recommendations",
+      "6. Approval Signatures"
+    ],
+    "delivery": {
+      "post_to_slack_channel": true,
+      "attach_to_jira_ticket": true,
+      "store_in_governance_dashboard": true
+    }
+  },
+  "governance_dashboard": {
+    "enabled": true,
+    "record_all_ai_decisions": true,
+    "decision_fields": ["model_used", "input_data", "output_result", "reasoning", "confidence", "timestamp"],
+    "human_oversight_record": {
+      "include_hitl_approver": true,
+      "include_response_time": true,
+      "include_decision_outcome": true
+    },
+    "compliance_certification": true,
+    "dashboard_entry_retention_years": 7
+  },
+  "compliance_automation": {
+    "enabled": true,
+    "frameworks": [
+      {
+        "id": "dora_article_11",
+        "label": "DORA Article 11 — ICT Incident Management",
+        "jurisdiction": "EU",
+        "required_fields": ["ai_decisions_logged", "human_oversight_point", "explainability_provided", "audit_trail_complete"]
+      },
+      {
+        "id": "sox_section_404",
+        "label": "SOX Section 404 — IT General Controls",
+        "jurisdiction": "US",
+        "required_fields": ["decision_log", "human_approval_record", "access_control_evidence"]
+      }
+    ],
+    "auto_certify": true,
+    "certify_when": ["audit_trail_complete", "human_override_recorded", "all_ai_decisions_logged"]
+  },
+  "code": {
+    "entry_file": "nodes/node-05-narrator/index.js",
+    "runtime": "nodejs20",
+    "timeout_seconds": 30
+  },
+  "ai_model": {
+    "purpose": "root_cause_analysis and resolution_summary generation",
+    "model": "claude-3-5-sonnet-20241022",
+    "temperature": 0.1,
+    "max_tokens": 800,
+    "system_prompt_ref": "nodes/node-05-narrator/schema.js"
+  },
+  "structured_output": {
+    "schema_file": "nodes/node-05-narrator/schema.js",
+    "enforce_schema": true
+  },
+  "agent_variables": {
+    "receive_from_previous": ["incident_id", "service", "severity", "confidence", "reasoning", "ai_explanation", "alert_raw", "triggered_at", "triage_completed_at", "runbooks", "runbook_retrieved_at", "hitl", "slack_channel", "jira_ticket", "warroom_activated_at", "resolved_at"],
+    "final_output": true
+  }
+}

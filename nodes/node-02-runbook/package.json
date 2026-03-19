@@ -1,0 +1,14 @@
+{
+  "name": "@guardian/node-02-runbook",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "Guardian Node 02 — Runbook Agent: Confluence MCP Gateway + Knowledge Graph semantic search",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "decision": "approved",
+  "approver": "U0123456789",
+  "approver_name": "Jane Smith",
+  "approved_at": "2026-03-15T02:49:02Z",
+  "response_time_seconds": 109,
+  "incident_id": "INC-4471",
+  "action_taken": "approve",
+  "slack_message_ts": "1710467222.123456"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@guardian/node-01-triage",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "Guardian Node 01 — Triage Sentinel: PagerDuty webhook → P1/P2/P3 severity classification",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  }
+}
