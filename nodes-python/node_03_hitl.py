@@ -22,6 +22,7 @@
 #
 # For hackathon demo, Option A is recommended so the full flow runs live.
 
+import json
 import os
 import requests
 from datetime import datetime, timezone
@@ -147,6 +148,9 @@ def post_slack_message(incident):
 
 
 # ─── Airia entry point ─────────────────────────────────────────────────────
+if isinstance(input, str):
+    input = json.loads(input)
+
 ok, ts, err = post_slack_message(input)
 
 hitl_record = {

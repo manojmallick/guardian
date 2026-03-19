@@ -21,6 +21,7 @@
 # Input shape:  Node 03 output (has hitl, runbooks, severity, ...)
 # Output shape: input + slack_channel, jira_ticket, jira_url, warroom_activated_at
 
+import json
 import os
 import re
 import random
@@ -172,6 +173,9 @@ def create_jira_ticket(incident):
 
 
 # ─── Airia entry point ─────────────────────────────────────────────────────
+if isinstance(input, str):
+    input = json.loads(input)
+
 incident_id = input.get("incident_id", "INC-0000")
 service     = input.get("service",     "unknown")
 oncall_team = ONCALL_TEAMS.get(service, DEFAULT_ONCALL)

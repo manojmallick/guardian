@@ -8,6 +8,7 @@
 # Input shape:  PagerDuty webhook payload
 # Output shape: input + severity, confidence, reasoning, alert_raw
 
+import json
 from datetime import datetime, timezone
 
 # ─── Threshold constants ───────────────────────────────────────────────────
@@ -90,6 +91,9 @@ def classify_severity(alert, service):
 
 
 # ─── Airia entry point ─────────────────────────────────────────────────────
+if isinstance(input, str):
+    input = json.loads(input)
+
 alert   = input.get("alert", {})
 service = input.get("service", "unknown")
 

@@ -13,6 +13,7 @@
 # Input shape:  Node 01 output (has service, severity, alert_raw, ...)
 # Output shape: input + runbooks[], runbook_retrieved_at
 
+import json
 import os
 import re
 import requests
@@ -137,6 +138,9 @@ def search_confluence(service, alert_profile):
 
 
 # ─── Airia entry point ─────────────────────────────────────────────────────
+if isinstance(input, str):
+    input = json.loads(input)
+
 service     = input.get("service", "unknown")
 alert_raw   = input.get("alert_raw", {})
 alert_profile = "high-error-rate" if (alert_raw.get("errorRate", 0) > 0.10) else "latency-degradation"
