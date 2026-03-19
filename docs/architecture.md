@@ -2,59 +2,72 @@
 
 ## Overview
 
-Guardian is a five-node AI agent pipeline built on the Airia platform. It eliminates the 8–12 minutes of manual coordination overhead at the start of every financial services production incident, and simultaneously produces the compliance audit trail required by DORA Article 11 and SOX Section 404.
+Guardian is a five-node AI agent pipeline built on the Airia platform. All five nodes are **Python 3 code blocks** running inside Airia Agent Studio (`airia-ready/`). It eliminates the 8–12 minutes of manual coordination overhead at the start of every financial services production incident, and simultaneously produces the compliance audit trail required by DORA Article 11 and SOX Section 404.
 
 ## Pipeline Diagram
 
-```
-PagerDuty Alert
-     │
-     ▼ (webhook POST)
-┌─────────────────────────────────────────────────────────────────┐
-│  NODE 01 — TRIAGE SENTINEL                                      │
-│  Airia Features: Webhook Trigger, Code Block (Node.js),         │
-│                  AI Model Call, Structured Output, Agent Vars   │
-│  Logic: Deterministic P1/P2/P3 classification + AI reasoning    │
-│  Output: { severity, confidence, reasoning, ai_explanation }    │
-└─────────────────────────────┬───────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  NODE 02 — RUNBOOK AGENT                                        │
-│  Airia Features: Knowledge Graph, MCP Gateway (Confluence),     │
-│                  HTTPS Node, Agent Variables                     │
-│  Logic: Semantic runbook search via Knowledge Graph + MCP       │
-│  Output: { runbooks[{ title, url, steps, owner }] }             │
-└─────────────────────────────┬───────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  NODE 03 — HITL GATE                                            │
-│  Airia Features: Human-in-the-Loop Node, Slack Bot Deployment,  │
-│                  MCP Apps (interactive buttons)                  │
-│  Logic: Send interactive Slack approval; wait up to 15 min      │
-│  Output: { hitl: { decision, approver, approved_at } }          │
-│  DORA: Satisfies Article 11 human oversight requirement         │
-└─────────────────────────────┬───────────────────────────────────┘
-                              │ (on approve)
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  NODE 04 — WAR ROOM AGENT                                       │
-│  Airia Features: Nested Agents, MCP Gateway (Slack + Jira),     │
-│                  HTTPS Nodes                                     │
-│  Logic: SlackSubAgent + JiraSubAgent run in parallel            │
-│  Output: { slack_channel, slack_channel_id, jira_ticket }       │
-│  Timing: Completes in < 5 seconds                               │
-└─────────────────────────────┬───────────────────────────────────┘
-                              │ (on incident resolution)
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  NODE 05 — COMPLIANCE NARRATOR                                  │
-│  Airia Features: Document Generator, Governance Dashboard,      │
-│                  Compliance Automation, Structured Output        │
-│  Logic: Full AI decision audit trail + DORA/SOX post-mortem PDF │
-│  Output: { postmortem_pdf_url, governance_entry, compliance }   │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    PD["🚨 PagerDuty Alert\nWebhook POST"]
+
+    subgraph N01["Node 01 — Triage Sentinel · node_01_triage.py"]
+        direction TB
+        N01A["Deterministic P1/P2/P3 Classification\n(latency · error rate · duration · transactions)"]
+        N01B["Claude 3.5 Sonnet — AI Reasoning\n(explains decision in plain English)"]
+        N01A --> N01B
+    end
+
+    subgraph N02["Node 02 — Runbook Agent · node_02_runbook.py"]
+        direction TB
+        N02A["Airia Knowledge Graph\n(semantic search across Confluence space)"]
+        N02B["MCP Gateway → Atlassian Confluence\n(fetches runbook title · URL · top 3 steps)"]
+        N02A --> N02B
+    end
+
+    subgraph N03["Node 03 — HITL Gate · node_03_hitl.py"]
+        direction TB
+        N03A["Slack Block Kit Approval Card\n(severity · reasoning · runbook steps · SLA)"]
+        N03B["Airia HITL Node\n(waits for human Approve / Reject)"]
+        N03C["DORA Article 11 ✅\n(approver identity + timestamp recorded)"]
+        N03A --> N03B --> N03C
+    end
+
+    subgraph N04["Node 04 — War Room Coordinator · node_04_warroom.py"]
+        direction LR
+        N04A["Slack Channels API\n#inc-ID-service created\non-call team notified"]
+        N04B["Jira REST API\nINC ticket created\nPriority: Highest / High"]
+    end
+
+    subgraph N05["Node 05 — Compliance Narrator · node_05_narrator.py"]
+        direction TB
+        N05A["DORA / SOX Audit Timeline\n(Node 01→05 decisions · approver · timestamps)"]
+        N05B["Governance Entry\nGOV-INC-ID-DATE"]
+        N05C["compliance_status: DORA_SOX_COMPLIANT"]
+        N05A --> N05B --> N05C
+    end
+
+    SLACK["💬 Slack\n#inc-* war room"]
+    JIRA["📋 Jira\nINC ticket"]
+    GOV["📊 Airia Governance\nDashboard + Post-mortem"]
+
+    PD --> N01
+    N01 -->|"severity · confidence · reasoning"| N02
+    N02 -->|"+ runbook title · steps · URL"| N03
+    N03 -->|"+ hitl.decision · approver · approved_at"| N04
+    N04 -->|"+ slack_channel_url · jira_ticket"| N05
+    N04 --> SLACK
+    N04 --> JIRA
+    N05 --> GOV
+
+    style N01 fill:#1e3a5f,color:#fff,stroke:#4a9eff
+    style N02 fill:#1e3a5f,color:#fff,stroke:#4a9eff
+    style N03 fill:#5f1e1e,color:#fff,stroke:#ff4a4a
+    style N04 fill:#1e4f3a,color:#fff,stroke:#4aff9e
+    style N05 fill:#3a1e5f,color:#fff,stroke:#c44aff
+    style PD fill:#e63946,color:#fff,stroke:#c1121f
+    style SLACK fill:#4a154b,color:#fff,stroke:#e01e5a
+    style JIRA fill:#0052cc,color:#fff,stroke:#003d99
+    style GOV fill:#2d1b69,color:#fff,stroke:#6b3fa0
 ```
 
 ## Airia Features Used (All 16)
@@ -62,7 +75,7 @@ PagerDuty Alert
 | # | Feature | Node | Purpose |
 |---|---------|------|---------|
 | 01 | Webhook Trigger | 01 | Receives PagerDuty alert webhook |
-| 02 | Node.js Code Block | 01, 02, 04 | Deterministic severity + async parallel ops |
+| 02 | Python Code Block | 01–05 | All pipeline logic — deterministic classification, API calls, audit trail |
 | 03 | AI Model Call | 01, 05 | Reasoning explanation + root cause analysis |
 | 04 | Structured Output | All | Type-safe JSON between nodes |
 | 05 | Agent Variables | All | Context propagated through pipeline |
