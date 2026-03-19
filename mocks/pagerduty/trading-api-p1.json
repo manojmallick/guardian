@@ -12,6 +12,6 @@
     "affectedRegions": ["eu-west-1"]
   },
   "triggered_at": "2026-03-17T08:05:00Z",
-  "pagerduty_url": "https://yourcompany.pagerduty.com/incidents/INC-4474",
+  "pagerduty_url": "https://learnhubplay.eu.pagerduty.com/incidents/INC-4474",
   "runbook_hint": "trading-api-latency"
 }

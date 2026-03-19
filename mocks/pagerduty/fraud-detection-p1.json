@@ -12,6 +12,6 @@
     "affectedRegions": ["eu-west-1", "eu-central-1", "us-east-1"]
   },
   "triggered_at": "2026-03-16T14:33:00Z",
-  "pagerduty_url": "https://yourcompany.pagerduty.com/incidents/INC-4473",
+  "pagerduty_url": "https://learnhubplay.eu.pagerduty.com/incidents/INC-4473",
   "runbook_hint": "fraud-detection-degradation"
 }

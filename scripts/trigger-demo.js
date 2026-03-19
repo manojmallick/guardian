@@ -11,9 +11,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Parse CLI args
 const args = process.argv.slice(2);
-const serviceArg = args.find((a) => a.startsWith('--service='))?.split('=')[1] ?? 'payment-gateway';
+const serviceArg  = args.find((a) => a.startsWith('--service='))?.split('=')[1]  ?? 'payment-gateway';
 const severityArg = args.find((a) => a.startsWith('--severity='))?.split('=')[1] ?? 'p1';
-const modeArg = args.find((a) => a.startsWith('--mode='))?.split('=')[1] ?? 'direct';
+const modeArg     = args.find((a) => a.startsWith('--mode='))?.split('=')[1]     ?? 'direct';
+
+// Generate a unique incident ID per run so Slack channels never collide
+const tsTag      = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '').slice(2); // e.g. 2603191345
+const incidentId = args.find((a) => a.startsWith('--incident='))?.split('=')[1]
+  ?? `INC-${tsTag}`;
 
 const MOCK_MAP = {
   'payment-gateway-p1': 'mocks/pagerduty/payment-gateway-p1.json',
@@ -25,7 +30,11 @@ const MOCK_MAP = {
 const mockKey = `${serviceArg}-${severityArg}`;
 const mockFile = MOCK_MAP[mockKey] ?? MOCK_MAP['payment-gateway-p1'];
 const mockPath = resolve(__dirname, '..', mockFile);
-const payload = JSON.parse(readFileSync(mockPath, 'utf-8'));
+const payload  = {
+  ...JSON.parse(readFileSync(mockPath, 'utf-8')),
+  incident_id:  incidentId,
+  triggered_at: new Date().toISOString(),
+};
 
 console.log('\n🛡  Guardian — Demo Trigger\n' + '─'.repeat(50));
 console.log(`Mode:    ${modeArg}`);

@@ -12,6 +12,6 @@
     "affectedRegions": ["eu-west-1", "eu-central-1"]
   },
   "triggered_at": "2026-03-15T02:47:13Z",
-  "pagerduty_url": "https://yourcompany.pagerduty.com/incidents/INC-4471",
+  "pagerduty_url": "https://learnhubplay.eu.pagerduty.com/incidents/INC-4471",
   "runbook_hint": "payment-gateway-latency"
 }
