@@ -50,9 +50,9 @@ export async function renderPostMortemPDF(context, airiaTools) {
   if (airiaTools && airiaTools.documentGenerator) {
     return airiaTools.documentGenerator.render(doc, { format: 'pdf' });
   }
-  // Local fallback: return a simulated PDF URL
+  // Local fallback: return the Jira ticket URL as the audit trail
   return {
-    url: `https://guardian-docs.airia.ai/postmortems/${context.incident_id}-postmortem.pdf`,
+    url: context.jira_url || `https://mmallick1990.atlassian.net/browse/${context.jira_ticket || context.incident_id}`,
     size_bytes: 48320,
     generated_at: new Date().toISOString(),
   };

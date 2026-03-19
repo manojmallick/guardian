@@ -5,7 +5,7 @@
 
 **Airia AI Agents Hackathon 2026 · Track 2: Active Agents**
 
-[![Winning Index](https://img.shields.io/badge/Winning%20Index-9.87%20%2F%2010.0-purple)]()
+
 [![Airia Features](https://img.shields.io/badge/Airia%20Features-16-blue)]()
 [![Node.js](https://img.shields.io/badge/Node.js-20-green)]()
 [![Regulatory](https://img.shields.io/badge/DORA%20%7C%20SOX-Compliant-orange)]()
@@ -49,9 +49,9 @@ Fork any of these for your own use:
 
 | Module | Description | Fork For |
 |--------|-------------|----------|
-| [Triage Sentinel](https://community.airia.com/agents/triage-sentinel) | Universal alert classification | Any alerting tool |
-| [War Room Coordinator](https://community.airia.com/agents/warroom-coordinator) | Slack + Jira war room in 4s | Any SRE team |
-| [Compliance Narrator](https://community.airia.com/agents/compliance-narrator) | AI audit trail PDF | Any regulated industry |
+| [Triage Sentinel](https://github.com/manojmallick/guardian/tree/main/community/triage-sentinel) | Universal alert classification | Any alerting tool |
+| [War Room Coordinator](https://github.com/manojmallick/guardian/tree/main/community/warroom-coordinator) | Slack + Jira war room in 4s | Any SRE team |
+| [Compliance Narrator](https://github.com/manojmallick/guardian/tree/main/community/compliance-narrator) | AI audit trail PDF | Any regulated industry |
 
 ## Setup
 
@@ -68,4 +68,4 @@ npm run demo                # Trigger a test alert end-to-end
 ## Built By
 
 **Manoj Mallick** — Solution Architect, 15+ years fintech  
-LearnHubPlay BV · Amsterdam, Netherlands
+Amsterdam, Netherlands

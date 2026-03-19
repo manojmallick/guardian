@@ -168,7 +168,10 @@ post_mortem = {
 }
 
 governance_entry = f"GOV-{incident_id}-{datetime.now(timezone.utc).strftime('%Y%m%d')}"
-pdf_url          = f"https://guardian-docs.airia.ai/postmortems/{incident_id}-postmortem.pdf"
+
+# Postmortem URL — links to the real Jira ticket which contains the full audit trail
+jira_url = input.get("jira_url", "")
+pdf_url  = jira_url if jira_url else f"https://mmallick1990.atlassian.net/browse/{input.get('jira_ticket', incident_id)}"
 
 output = {
     "incident_id":         incident_id,

@@ -1,6 +1,6 @@
 // scripts/trigger-demo.js
-// Run: node scripts/trigger-demo.js [--service payment-gateway] [--severity p1]
-// Fires a test PagerDuty alert or directly hits the Airia webhook endpoint for demo recording
+// Run: node scripts/trigger-demo.js [--service payment-gateway] [--severity p1] [--mode both|direct|pagerduty|local]
+// Default mode 'both': triggers PagerDuty incident AND fires the Airia pipeline simultaneously
 
 import 'dotenv/config';
 import { readFileSync } from 'fs';
@@ -13,7 +13,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
 const serviceArg  = args.find((a) => a.startsWith('--service='))?.split('=')[1]  ?? 'payment-gateway';
 const severityArg = args.find((a) => a.startsWith('--severity='))?.split('=')[1] ?? 'p1';
-const modeArg     = args.find((a) => a.startsWith('--mode='))?.split('=')[1]     ?? 'direct';
+const modeArg     = args.find((a) => a.startsWith('--mode='))?.split('=')[1]     ?? 'both';
 
 // Generate a unique incident ID per run so Slack channels never collide
 const tsTag      = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '').slice(2); // e.g. 2603191345
@@ -143,4 +143,59 @@ if (modeArg === 'local') {
 
   console.log(`✅  PagerDuty alert triggered. Dedup key: ${result.dedup_key}`);
   console.log('    Guardian pipeline will fire via webhook in ~5 seconds.\n');
+
+} else if (modeArg === 'both') {
+  // ── Step 1: Trigger PagerDuty incident ────────────────────────────────────
+  const pdKey = process.env.PAGERDUTY_INTEGRATION_KEY;
+  if (pdKey) {
+    const pdPayload = {
+      routing_key: pdKey,
+      event_action: 'trigger',
+      payload: {
+        summary: `[GUARDIAN] ${payload.service} degradation — ${incidentId}`,
+        source: payload.service,
+        severity: 'critical',
+        custom_details: payload.alert,
+      },
+      client: 'Guardian AI Pipeline',
+      client_url: `https://learnhubplay.eu.pagerduty.com/service-directory/${process.env.PAGERDUTY_SERVICE_ID ?? 'PWBWLYK'}`,
+    };
+    const pdRes = await fetch('https://events.pagerduty.com/v2/enqueue', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pdPayload),
+    });
+    const pdResult = await pdRes.json();
+    if (pdResult.status === 'success') {
+      console.log(`✅  PagerDuty incident created. Dedup key: ${pdResult.dedup_key}`);
+    } else {
+      console.warn(`⚠️   PagerDuty trigger warning: ${JSON.stringify(pdResult)}`);
+    }
+  } else {
+    console.warn('⚠️   PAGERDUTY_INTEGRATION_KEY not set — skipping PD trigger');
+  }
+
+  // ── Step 2: Fire Airia pipeline directly ──────────────────────────────────
+  const endpointUrl = process.env.AIRIA_ENDPOINT_URL;
+  if (!endpointUrl) {
+    console.error('❌  AIRIA_ENDPOINT_URL not set in .env');
+    process.exit(1);
+  }
+  console.log(`\nSending to Airia endpoint: ${endpointUrl}\n`);
+  const res = await fetch(endpointUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Api-Key': process.env.AIRIA_API_KEY,
+    },
+    body: JSON.stringify({ UserInput: JSON.stringify(payload) }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    console.error(`❌  Airia endpoint returned ${res.status}: ${text}`);
+    process.exit(1);
+  }
+  const result = await res.json();
+  console.log('✅  Airia Guardian pipeline triggered.\n');
+  console.log('Response:', JSON.stringify(result, null, 2));
 }

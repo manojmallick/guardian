@@ -36,7 +36,7 @@ JIRA_EMAIL         = os.environ.get("JIRA_EMAIL",         "")
 JIRA_API_TOKEN     = os.environ.get("JIRA_API_TOKEN",     "")
 JIRA_PROJECT_KEY   = os.environ.get("JIRA_PROJECT_KEY",   "INC")
 
-PRIORITY_MAP = {"P1": "Critical", "P2": "High", "P3": "Medium"}
+PRIORITY_MAP = {"P1": "Highest", "P2": "High", "P3": "Medium"}
 
 ONCALL_TEAMS = {
     "payment-gateway": ["@payments-oncall", "@sre-oncall"],
