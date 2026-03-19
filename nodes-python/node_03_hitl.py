@@ -22,6 +22,7 @@
 #
 # For hackathon demo, Option A is recommended so the full flow runs live.
 
+import ast
 import json
 import os
 import requests
@@ -149,7 +150,10 @@ def post_slack_message(incident):
 
 # ─── Airia entry point ─────────────────────────────────────────────────────
 if isinstance(input, str):
-    input = json.loads(input)
+    try:
+        input = json.loads(input)
+    except (json.JSONDecodeError, ValueError):
+        input = ast.literal_eval(input)
 
 ok, ts, err = post_slack_message(input)
 

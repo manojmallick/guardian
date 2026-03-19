@@ -21,6 +21,7 @@
 # Input shape:  Node 03 output (has hitl, runbooks, severity, ...)
 # Output shape: input + slack_channel, jira_ticket, jira_url, warroom_activated_at
 
+import ast
 import json
 import os
 import re
@@ -174,7 +175,10 @@ def create_jira_ticket(incident):
 
 # ─── Airia entry point ─────────────────────────────────────────────────────
 if isinstance(input, str):
-    input = json.loads(input)
+    try:
+        input = json.loads(input)
+    except (json.JSONDecodeError, ValueError):
+        input = ast.literal_eval(input)
 
 incident_id = input.get("incident_id", "INC-0000")
 service     = input.get("service",     "unknown")

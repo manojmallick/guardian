@@ -15,6 +15,7 @@
 # Output shape: incident_id, postmortem_pdf_url, governance_entry,
 #               compliance_status, postmortem_content, generated_at
 
+import ast
 import json
 from datetime import datetime, timezone
 
@@ -133,7 +134,10 @@ def build_compliance_record():
 
 # ─── Airia entry point ─────────────────────────────────────────────────────
 if isinstance(input, str):
-    input = json.loads(input)
+    try:
+        input = json.loads(input)
+    except (json.JSONDecodeError, ValueError):
+        input = ast.literal_eval(input)
 
 incident_id = input.get("incident_id", "INC-0000")
 service     = input.get("service",     "unknown")

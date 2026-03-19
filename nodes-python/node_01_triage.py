@@ -8,6 +8,7 @@
 # Input shape:  PagerDuty webhook payload
 # Output shape: input + severity, confidence, reasoning, alert_raw
 
+import ast
 import json
 from datetime import datetime, timezone
 
@@ -92,7 +93,10 @@ def classify_severity(alert, service):
 
 # ─── Airia entry point ─────────────────────────────────────────────────────
 if isinstance(input, str):
-    input = json.loads(input)
+    try:
+        input = json.loads(input)
+    except (json.JSONDecodeError, ValueError):
+        input = ast.literal_eval(input)
 
 alert   = input.get("alert", {})
 service = input.get("service", "unknown")

@@ -13,6 +13,7 @@
 # Input shape:  Node 01 output (has service, severity, alert_raw, ...)
 # Output shape: input + runbooks[], runbook_retrieved_at
 
+import ast
 import json
 import os
 import re
@@ -139,7 +140,10 @@ def search_confluence(service, alert_profile):
 
 # ─── Airia entry point ─────────────────────────────────────────────────────
 if isinstance(input, str):
-    input = json.loads(input)
+    try:
+        input = json.loads(input)
+    except (json.JSONDecodeError, ValueError):
+        input = ast.literal_eval(input)
 
 service     = input.get("service", "unknown")
 alert_raw   = input.get("alert_raw", {})
