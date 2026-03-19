@@ -33,4 +33,7 @@ Thumbs.db
 .vscode/settings.json
 .idea/
 
+# Pre-filled Airia nodes (contain live credentials — never commit)
+airia-ready/
+
 
