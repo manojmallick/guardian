@@ -45,6 +45,27 @@ async function getSpaceHomePage() {
   return data.homepage.id;
 }
 
+async function findExistingPage(title) {
+  const encoded = encodeURIComponent(title);
+  const data = await confluenceRequest(
+    'GET',
+    `/content?spaceKey=${SPACE_KEY}&title=${encoded}&expand=version`
+  );
+  const results = data.results ?? [];
+  return results.length > 0 ? results[0] : null;
+}
+
+async function updatePage(pageId, currentVersion, title, storageContent) {
+  return confluenceRequest('PUT', `/content/${pageId}`, {
+    type:    'page',
+    title,
+    version: { number: currentVersion + 1 },
+    body: {
+      storage: { value: storageContent, representation: 'storage' },
+    },
+  });
+}
+
 function markdownToConfluenceStorage(markdown) {
   // Minimal markdown → Confluence storage format conversion for runbook pages
   let html = markdown
@@ -52,14 +73,19 @@ function markdownToConfluenceStorage(markdown) {
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
     .replace(/^### (.+)$/gm, '<h3>$1</h3>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
-    .replace(/^- (.+)$/gm, '<li>$2</li>')
+    .replace(/^- (.+)$/gm, '<ul-item>$1</ul-item>')
+    .replace(/^(\d+)\. (.+)$/gm, '<ol-item>$2</ol-item>')
     .replace(/```bash\n([\s\S]+?)```/g, '<ac:structured-macro ac:name="code"><ac:parameter ac:name="language">bash</ac:parameter><ac:plain-text-body><![CDATA[$1]]></ac:plain-text-body></ac:structured-macro>')
     .replace(/\n\n/g, '</p><p>')
     .trim();
 
-  // Wrap consecutive <li> elements in <ol> or <ul>
-  html = html.replace(/((<li>.*<\/li>\n?)+)/g, '<ol>$1</ol>');
+  // Wrap consecutive items in proper list types
+  html = html.replace(/((<ul-item>.*<\/ul-item>\n?)+)/g, (_, block) =>
+    '<ul>' + block.replace(/<ul-item>/g, '<li>').replace(/<\/ul-item>/g, '</li>') + '</ul>'
+  );
+  html = html.replace(/((<ol-item>.*<\/ol-item>\n?)+)/g, (_, block) =>
+    '<ol>' + block.replace(/<ol-item>/g, '<li>').replace(/<\/ol-item>/g, '</li>') + '</ol>'
+  );
 
   return `<p>${html}</p>`;
 }
@@ -93,28 +119,35 @@ for (const runbook of RUNBOOKS) {
   const serviceLabel = runbook.slug.split('-').slice(0, 2).join('-');
 
   try {
-    const page = await confluenceRequest('POST', '/content', {
-      type:  'page',
-      title,
-      space: { key: SPACE_KEY },
-      ancestors: [{ id: parentId }],
-      body: {
-        storage: {
-          value:          storageContent,
-          representation: 'storage',
+    const existing = await findExistingPage(title);
+    if (existing) {
+      const currentVersion = existing.version.number;
+      await updatePage(existing.id, currentVersion, title, storageContent);
+      console.log(`🔄  Updated: "${title}" (id: ${existing.id}, v${currentVersion + 1})`);
+    } else {
+      const page = await confluenceRequest('POST', '/content', {
+        type:  'page',
+        title,
+        space: { key: SPACE_KEY },
+        ancestors: [{ id: parentId }],
+        body: {
+          storage: {
+            value:          storageContent,
+            representation: 'storage',
+          },
         },
-      },
-      metadata: {
-        labels: [
-          { prefix: 'global', name: `service:${serviceLabel}` },
-          { prefix: 'global', name: 'type:runbook'             },
-          { prefix: 'global', name: 'guardian-indexed'         },
-        ],
-      },
-    });
-    console.log(`✅  Created: "${title}" (id: ${page.id})`);
+        metadata: {
+          labels: [
+            { prefix: 'global', name: `service:${serviceLabel}` },
+            { prefix: 'global', name: 'type:runbook'             },
+            { prefix: 'global', name: 'guardian-indexed'         },
+          ],
+        },
+      });
+      console.log(`✅  Created: "${title}" (id: ${page.id})`);
+    }
   } catch (err) {
-    console.error(`❌  Failed to create "${title}": ${err.message}`);
+    console.error(`❌  Failed to seed "${title}": ${err.message}`);
   }
 }
 
