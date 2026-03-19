@@ -9,7 +9,6 @@
   },
   "workspaces": [
     "nodes/*",
-    "sub-agents/*",
     "community/*"
   ],
   "scripts": {
@@ -21,7 +20,7 @@
     "test:unit":        "jest tests/unit/",
     "test:integration": "jest tests/integration/",
     "postmortem:gen":   "node scripts/generate-postmortem.js",
-    "lint":             "eslint nodes/ sub-agents/ community/ config/ --ext .js"
+    "lint":             "eslint nodes/ community/ config/ --ext .js"
   },
   "dependencies": {
     "zod":    "^3.22.0",
