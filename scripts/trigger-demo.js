@@ -94,9 +94,9 @@ if (modeArg === 'local') {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.AIRIA_API_KEY}`,
+      'X-Api-Key': process.env.AIRIA_API_KEY,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ UserInput: JSON.stringify(payload) }),
   });
 
   if (!res.ok) {
