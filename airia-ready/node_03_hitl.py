@@ -164,9 +164,8 @@ def update_slack_message_approved(ts, incident):
                 "Content-Type":  "application/json",
             },
             json={
-                "channel":   SLACK_CHANNEL,
-                "thread_ts": ts,  # posts as reply to the buttons card
-                "text":      f"✅ APPROVED — {severity} Incident Response Authorised",
+                "channel": SLACK_CHANNEL,
+                "text":    f"✅ APPROVED — {severity} Incident Response Authorised",
                 "blocks": [
                     {
                         "type": "header",
