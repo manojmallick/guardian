@@ -235,7 +235,7 @@ ok, ts, err = post_slack_message(input)
 if ok and AUTO_APPROVE:
     # Wait so the Approve/Reject buttons are visible in the demo
     # before Guardian auto-approves and replaces them with ✅ APPROVED
-    time.sleep(8)
+    time.sleep(20)
     update_slack_message_approved(ts, input)
 
 hitl_record = {
