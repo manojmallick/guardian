@@ -144,6 +144,7 @@ scripts/              ← Demo trigger, seed scripts, setup checker
 tests/                ← 127 Jest unit + integration tests
 docs/                 ← Architecture reference, runbooks
 mocks/                ← PagerDuty + Confluence fixture payloads
+screenshots/          ← Live demo screenshots (PagerDuty → Airia → Slack → Jira → Confluence)
 ```
 
 ---
@@ -212,6 +213,76 @@ CONFLUENCE_SPACE_KEY=
 ## Demo
 
 See [demo.md](demo.md) for the full 4-minute demo walkthrough — browser setup, talking points, and what to show at every step.
+
+---
+
+## Demo Screenshots
+
+> All screenshots are from a **live run** of the full Guardian pipeline against a real P1 `payment-gateway` degradation event — no mocks, no simulations.
+
+---
+
+### 🚨 Step 1 — Alert Fires in PagerDuty
+
+**Incidents dashboard** — Guardian-triggered P1 alerts appear the moment the webhook fires.
+
+![PagerDuty Incidents Dashboard](screenshots/01-pagerduty-incidents-dashboard.png)
+
+**Incident detail** — `[GUARDIAN] payment-gateway degradation` automatically classified, assigned and escalating.
+
+![PagerDuty Incident Detail](screenshots/02-pagerduty-incident-detail.png)
+
+---
+
+### 🤖 Step 2 — Airia Pipeline Executes
+
+**Guardian pipeline canvas (v15.00 · Published)** — all five nodes wired end-to-end in Airia Agent Studio.
+
+![Airia Pipeline Canvas](screenshots/04-airia-pipeline-canvas.png)
+
+**Run steps** — each node completes in sequence; entire pipeline succeeds in **3.6 seconds**.
+
+![Airia Run Steps](screenshots/03-airia-run-steps.png)
+
+**Run timeline** — Gantt view of node execution: Triage (61ms) → Runbook (664ms) → HITL Gate (285ms) → War Room (2.3s) → Compliance (64ms).
+
+![Airia Run Timeline](screenshots/05-airia-run-timeline.png)
+
+---
+
+### 📋 Step 3 — Runbook Fetched from Confluence
+
+Node 02 retrieves the exact runbook from Confluence via the Airia MCP Gateway + Knowledge Graph.
+
+![Confluence Runbook](screenshots/10-confluence-runbook.png)
+
+---
+
+### ✅ Step 4 — HITL Approval & War Room Created
+
+**Slack Guardian DM** — multiple war-room activation messages arrive for each triggered incident.
+
+![Slack Guardian War Rooms List](screenshots/07-slack-guardian-warrooms-list.png)
+
+**War room channel** — `#inc-*-payment-gateway` auto-created, fully briefed: triage result, runbook steps, Jira ticket, HITL approver, and on-call cc.
+
+![Slack War Room Channel](screenshots/08-slack-warroom-channel.png)
+
+---
+
+### 🎫 Step 5 — Jira Ticket Auto-Created
+
+Priority **Highest**, labelled `dora-tracked` + `guardian-automated`, linked to the Guardian audit session — zero manual input.
+
+![Jira Incident Ticket](screenshots/09-jira-incident-ticket.png)
+
+---
+
+### 🛡 Step 6 — DORA/SOX Compliance Output
+
+**Pipeline JSON output** — full audit trail: triage reasoning, runbook retrieval source, HITL decision, war-room URLs, and `compliance_status: DORA_SOX_COMPLIANT` — all in one structured payload.
+
+![Airia Compliance JSON Output](screenshots/06-airia-compliance-json-output.png)
 
 ---
 
