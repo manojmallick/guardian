@@ -233,10 +233,15 @@ if isinstance(input, str):
 ok, ts, err = post_slack_message(input)
 
 if ok and AUTO_APPROVE:
-    # Wait so the Approve/Reject buttons are visible in the demo
-    # before Guardian auto-approves and replaces them with ✅ APPROVED
-    time.sleep(20)
-    update_slack_message_approved(ts, input)
+    # Sleep so the Approve/Reject buttons are visible on camera.
+    # NOTE: if Airia times out this node before 20s, the update below
+    # will not fire — but the buttons card stays in Slack as a record.
+    try:
+        time.sleep(20)
+        update_slack_message_approved(ts, input)
+    except Exception:
+        # Timeout or any error — pipeline still continues
+        pass
 
 hitl_record = {
     "decision":               "APPROVED",
