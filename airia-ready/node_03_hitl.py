@@ -149,9 +149,7 @@ def post_slack_message(incident):
 
 
 def update_slack_message_approved(ts, incident):
-    """Replace interactive buttons with a clean APPROVED status block."""
-    if not ts:
-        return
+    """Post a new APPROVED message (keeps the buttons card visible above it)."""
     severity   = incident.get("severity", "P1")
     service    = incident.get("service", "unknown")
     confidence = incident.get("confidence", 0)
@@ -160,14 +158,15 @@ def update_slack_message_approved(ts, incident):
     approved_at = datetime.now(timezone.utc).strftime("%H:%M:%S UTC")
     try:
         requests.post(
-            "https://slack.com/api/chat.update",
+            "https://slack.com/api/chat.postMessage",
             headers={
                 "Authorization": f"Bearer {SLACK_BOT_TOKEN}",
                 "Content-Type":  "application/json",
             },
             json={
-                "channel": SLACK_CHANNEL,
-                "ts":      ts,
+                "channel":   SLACK_CHANNEL,
+                "thread_ts": ts,  # posts as reply to the buttons card
+                "text":      f"✅ APPROVED — {severity} Incident Response Authorised",
                 "blocks": [
                     {
                         "type": "header",
