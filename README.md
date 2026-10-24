@@ -179,12 +179,37 @@ CONFLUENCE_API_TOKEN=
 CONFLUENCE_SPACE_KEY=
 ```
 
+### Environment variable reference
+
+All variables come from `.env.example`. Keys marked "required" are needed for the live pipeline; the rest have defaults or are only used by helper scripts.
+
+| Variable | Required | Meaning |
+|---|---|---|
+| `AIRIA_API_KEY` | yes | Airia API key (dashboard, Settings, API) |
+| `AIRIA_WORKSPACE_ID` | no | Workspace ID, from the Airia dashboard URL |
+| `AIRIA_PIPELINE_ID` | yes | Guardian pipeline ID, available after the first deployment |
+| `AIRIA_ENDPOINT_URL` | no | Webhook endpoint URL from the Node 01 deployment |
+| `PAGERDUTY_INTEGRATION_KEY` | yes | Service integration key used by the Guardian webhook |
+| `PAGERDUTY_API_TOKEN`, `PAGERDUTY_SERVICE_ID` | demo only | REST token and service ID used by `npm run demo` to trigger a test alert |
+| `SLACK_BOT_TOKEN` | yes | `xoxb-...` bot token |
+| `SLACK_SIGNING_SECRET` | no | For webhook verification |
+| `SLACK_ONCALL_CHANNEL` | yes | Channel ID that receives human-in-the-loop approval messages |
+| `SLACK_WORKSPACE_ID` | no | `T...` workspace ID |
+| `JIRA_BASE_URL`, `JIRA_EMAIL`, `JIRA_API_TOKEN` | yes | Jira site, account email and API token |
+| `JIRA_PROJECT_KEY` | yes | Project for incident tickets, default `INC` |
+| `CONFLUENCE_BASE_URL`, `CONFLUENCE_EMAIL`, `CONFLUENCE_API_TOKEN` | yes | Confluence site, email and token (the same Atlassian token as Jira works; in production it lives in the Airia vault, locally it is used for seeding) |
+| `CONFLUENCE_SPACE_KEY` | yes | Space holding the runbooks, default `RUNBOOKS` |
+| `AI_MODEL`, `AI_MAX_TOKENS`, `AI_TEMPERATURE` | no | Optional model override (default `claude-3-5-sonnet-20241022`, `1000`, `0.1`); Airia handles model calls itself |
+| `HITL_TIMEOUT_MINUTES` | no | Minutes before an unanswered approval escalates, default `15` |
+| `NODE_ENV`, `LOG_LEVEL` | no | `development` or `production`; `debug`, `info`, `warn` or `error` |
+
 ### npm Scripts
 
 | Command | What it does |
 |---------|-------------|
 | `npm run demo` | Fire a live P1 alert — PagerDuty + full Airia pipeline |
-| `npm test` | Run all 127 Jest tests |
+| `npm test` | Run all Jest tests (127 at the time of writing) |
+| `npm run test:unit`, `npm run test:integration` | Run only the unit or only the integration tests |
 | `npm run setup` | Check all service connections |
 | `npm run seed:confluence` | Seed Confluence with 4 runbooks |
 | `npm run seed:kg` | Seed Airia Knowledge Graph |
